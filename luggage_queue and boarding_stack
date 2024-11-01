@@ -1,0 +1,96 @@
+# luggage_queue.py
+
+# This class manage the luggage queue
+class LuggageQueue:
+    def __init__(self):
+        # Empty list to store luggage
+        self.queue = []     
+
+    # This function add luggage to the queue
+    def add_luggage(self, luggage_id, passenger_seat):
+        # Give each piece of luggage a number
+        loading_order = len(self.queue) + 1  
+        new_luggage = (luggage_id, passenger_seat, loading_order)
+        # add the luggage
+        self.queue.append(new_luggage)
+        print("Luggage " + str(luggage_id) + " added to the queue for passenger in seat " + str(passenger_seat))
+        return True
+
+    # This function remove and return the first luggage in line
+    def unload_luggage(self):
+        if not self.queue:
+            print("No luggage to unload.")
+            return None
+        luggage = self.queue.pop(0)
+        # Print luggage information
+        print("Luggage " + luggage[0] + " unloaded for passenger in seat " + str(luggage[1]))
+        return luggage
+
+    # This function show all luggage in the queue
+    def display_luggage(self):
+        if not self.queue:
+            print("No luggage in the queue.")
+        else:
+            print("\nLuggage Queue (Front to Back):")
+            # for loop to print all luggage
+            for luggage_id, passenger_seat, loading_order in self.queue:
+                print("Luggage ID: " + str(luggage_id) + ", Passenger Seat: " + str(passenger_seat) + ", Loading Order: " + str(loading_order))
+# boarding_stack.py
+
+# This class manage the boarding process
+class BoardingStack:
+    def __init__(self):
+        # Empty list to store boarded passenger
+        self.stack = []      
+        # Maximum number of seat on the plane
+        self.max_seat = 30   
+
+    # This function add a passenger to the plane
+    def board_passenger(self, passenger_data):
+        # Passenger must board from back to front
+        if self.stack and passenger_data["seat_number"] < self.stack[-1][0]["seat_number"]:
+            print("Error: Must board from back to front please wait for passengers with higher seat numbers to board first")
+            return False
+            
+        boarding_order = len(self.stack) + 1
+        self.stack.append((passenger_data, boarding_order))
+        passenger_name = passenger_data['name']
+        seat_number = passenger_data['seat_number']
+        
+        # Add priority info if applicable
+        if passenger_data['is_priority']:
+            priority_info = " (Priority)"
+        else:
+            priority_info = ""
+
+        # print the passenger name with seat number and priority information
+        print("Passenger " + passenger_name + " boarded with seat " + str(seat_number) + priority_info)
+        return True
+
+    # This function remove the last passenger who boarded
+    def exit_passenger(self):
+        if not self.stack:
+            print("No passengers to exit.")
+            return None
+        passenger, boarding_order = self.stack.pop()
+        # print the passenger
+        print("Passenger " + passenger['name'] + " exited from seat " + str(passenger['seat_number']))
+        return passenger
+
+    # This function show all passenger on the plane
+    def display_boarded(self):
+        if not self.stack:
+            print("No passengers are boarded.")
+        else:
+            print("\nBoarded Passengers (Last to First):")
+            # for loop to print all passenger on the plane that boarded last to first
+            for passenger, boarding_order in reversed(self.stack):
+                passenger_name = passenger['name']
+                seat_number = passenger['seat_number']
+                
+                if passenger['is_priority']:
+                    priority_info = " (Priority)"
+                else:
+                    priority_info = ""
+                # print passenger
+                print("Passenger: " + passenger_name + ", Seat: " + str(seat_number) + priority_info + ", Boarding Order: " + str(boarding_order))
